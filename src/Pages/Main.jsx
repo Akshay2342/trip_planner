@@ -21,9 +21,11 @@ function Main() {
   const setDebouncedBounds = debounce((newBounds) => setbounds(newBounds), 3000);
   const setDebouncedrest = debounce((newBounds) => setrest(newBounds), 3000);
   const options = ['restaurants', 'hotels', 'attractions'];
+  const [userCoordinates, setUserCoordinates] = useState({ lat: 0, lng: 0 });
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(({ coords : {latitude,longitude}}) => {
-      setcoordinates({lat : latitude, lng : longitude});
+      setUserCoordinates({lat : latitude, lng : longitude});
     })
   },[])
 
@@ -65,7 +67,7 @@ function Main() {
           <List places={rest} />
         </Grid>
         <Grid item xs={12} md={8}>
-        <Map setbounds ={setDebouncedBounds} setcoordinates = {setcoordinates} coordinates={coordinates} places={rest} setChildClicked ={setChildClicked} />        </Grid>
+        <Map userCoordinates={userCoordinates} setbounds ={setDebouncedBounds} setcoordinates = {setcoordinates} coordinates={coordinates} places={rest} setChildClicked ={setChildClicked} />        </Grid>
       </Grid>
     </div>
   );

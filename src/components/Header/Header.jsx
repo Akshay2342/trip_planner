@@ -56,8 +56,8 @@ export default function SearchAppBar({setcoordinates}) {
   const [autocomplete,setautocomplete]=React.useState(null);
   const onLoad=(autoc)=>setautocomplete(autoc);
   const onPlaceChanged=()=>{
-    const lat = autocomplete.getPlace().geometry.location.lat();
-    const lng = autocomplete.getPlace().geometry.location.lng();
+    const lat = autocomplete?.getPlace().geometry.location.lat();
+    const lng = autocomplete?.getPlace().geometry.location.lng();
     setcoordinates({ lat, lng });
   }
   return (
