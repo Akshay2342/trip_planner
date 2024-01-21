@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import { Autocomplete } from '@react-google-maps/api';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -51,7 +52,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function SearchAppBar() {
+export default function SearchAppBar({setcoordinates}) {
+  const [autocomplete,setautocomplete]=React.useState(null);
+  const onLoad=(autoc)=>setautocomplete(autoc);
+  const onPlaceChanged=()=>{
+    const lat = autocomplete.getPlace().geometry.location.lat();
+    const lng = autocomplete.getPlace().geometry.location.lng();
+    setcoordinates({ lat, lng });
+  }
   return (
     <Box sx={{ flexGrow: 1 , margin : 0 , padding : 0}} >
       <AppBar position="static">
@@ -73,6 +81,7 @@ export default function SearchAppBar() {
           >
             MUI
           </Typography>
+        <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}> 
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -82,6 +91,7 @@ export default function SearchAppBar() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
+        </Autocomplete>
         </Toolbar>
       </AppBar>
     </Box>

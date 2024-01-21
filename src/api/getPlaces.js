@@ -1,24 +1,26 @@
 import axios from "axios";  
 
 
-export default async function getPlaces(bounds) {
+export default async function getPlaces({bounds , Place}) {
     const options = {
       method: 'GET',
-      url: 'https://travel-advisor.p.rapidapi.com/restaurants/list-in-boundary',
+      url: `https://travel-advisor.p.rapidapi.com/${Place}/list-in-boundary`,
       params: {
         bl_latitude: bounds.bl.lat,
         tr_latitude: bounds.tr.lat,
         bl_longitude: bounds.bl.lng,
         tr_longitude: bounds.tr.lng
-      },
+      },  
       headers: {
-        'X-RapidAPI-Key': '67f9dbac1bmshac8c95129120ea0p18751ejsn0d305eb720ca',
+        'X-RapidAPI-Key': 'b83c0f3e30msh43eee8b4f2ed609p18f11bjsn5847c6b51ef9',
         'X-RapidAPI-Host': 'travel-advisor.p.rapidapi.com'
       }
-    };
+    };  
     try {
         const  response = await axios.request(options);
-        // console.log(response.data);
+        console.log(response.data)
+        // return response.data;
+        console.log(bounds , Place)
         return response.data;
     } catch (error) {
         console.error(error);
