@@ -1,10 +1,11 @@
 import Header from './components/Header/Header';
-import PlaceDetails from './components/PlaceDetails/PlaceDetails';
+import PlaceDetails from './components/Planner/DragList';
 import List from './components/List/List';
 import Map from './components/Map/Map';
 import { CssBaseline,Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
 import getPlaces from './api/getPlaces';
+
 
 function App() {
 
@@ -42,6 +43,7 @@ function App() {
           <Map setbounds ={setbounds} setcoordinates = {setcoordinates} coordinates={coordinates} places={rest} setChildClicked ={setChildClicked} />
         </Grid>
       </Grid> */}
+      <PlaceDetails/>
     </div>
   );
 }
