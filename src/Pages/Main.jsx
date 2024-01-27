@@ -9,9 +9,9 @@ import { Rating } from '@mui/material';
 import { TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { debounce } from 'lodash';
+import DragList from '../components/Planner/DragList';
 
 function Main() {
-
   const [rest,setrest] = useState([]);
   const [childClicked , setChildClicked] = useState(null);
   const [coordinates, setcoordinates] = useState({ });
@@ -69,6 +69,8 @@ function Main() {
         <Grid item xs={12} md={8}>
         <Map userCoordinates={userCoordinates} setbounds ={setDebouncedBounds} setcoordinates = {setcoordinates} coordinates={coordinates} places={rest} setChildClicked ={setChildClicked} />        </Grid>
       </Grid>
+      <h1> hello </h1>
+      <DragList/>
     </div>
   );
 }
