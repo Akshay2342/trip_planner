@@ -9,9 +9,18 @@ import { Polyline } from "@react-google-maps/api";
 const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked, userCoordinates }) => {
   const [map, setMap] = useState(null);
   const [decodedPath, setDecodedPath] = useState([]); // Store decoded path
+  const [showDirections , setShowDirections] = useState(true);
+  const [directions , setDirections] = useState([]);
+  const [origin, setorigin] = useState(null);
+  const [destination, setdestination] = useState(null);
+  const [waypoints, setwaypoints] = useState(null);
 
 
   //Decoding polyline and storing it in decodedPath
+
+  useEffect(() => {
+    console.log(directions);
+  }, [directions]);
 
   useEffect(() => {
     const encodedPolyline = "_p~iF~ps|U_ulLnnqC_mqNvxq`@"; // Replace with your actual encoded polyline
@@ -21,10 +30,39 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
   }, []);
 
   const handleApiLoaded = (map, maps) => {
-  //   setMap(map);
-  //   const encodedPolyline = "_p~iF~ps|U_ulLnnqC_mqNvxq`@"; // Replace with your actual encoded polyline
-  //   const decoded = maps.geometry.encoding.decodePath(encodedPolyline);
-  //   setDecodedPath(decoded);
+    const directionsService = new maps.DirectionsService();
+    const directionsRenderer = new maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+    directionsService.route(
+      {
+        origin: { lat: 37.77, lng: -122.447 },
+        destination: { lat: 37.768, lng: -122.511 },
+        travelMode: maps.TravelMode.DRIVING,
+        waypoints: [
+          {
+            location: { lat: 37.79, lng: -122.41 },
+            stopover: true,
+          },
+          {
+            location: { lat: 37.79, lng: -122.41 },
+            stopover: true,
+          },
+        ],
+      },
+      
+      (response, status) => {
+        if (status === "OK") {
+          directionsRenderer.setDirections(response);
+          console.log(response?.routes[0].legs[0].steps[0].instructions    )
+          const stepInstructions = response?.routes[0].legs.map(leg => leg.steps.map(step => step.instructions));
+          setDirections(...stepInstructions);
+          directionsRenderer.setMap(null);
+          // console.log(directions)
+        } else {
+          window.alert("Directions request failed due to " + status);
+        }
+      }
+    );
   };
 
   const handleOnChange = (e) => {
