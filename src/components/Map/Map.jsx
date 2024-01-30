@@ -3,10 +3,12 @@ import { Paper, Typography, useMediaQuery } from "@mui/material";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useState, useEffect } from "react";
 import polyline from "@mapbox/polyline";
+import mapStyles from "./styles";
 import { Polyline } from "@react-google-maps/api";
+import parse from 'html-react-parser'
 
 
-const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked, userCoordinates }) => {
+const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked, userCoordinates , dir }) => {
   const [map, setMap] = useState(null);
   const [decodedPath, setDecodedPath] = useState([]); // Store decoded path
   const [showDirections , setShowDirections] = useState(true);
@@ -56,7 +58,7 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
           console.log(response?.routes[0].legs[0].steps[0].instructions    )
           const stepInstructions = response?.routes[0].legs.map(leg => leg.steps.map(step => step.instructions));
           setDirections(...stepInstructions);
-          directionsRenderer.setMap(null);
+         {dir &&  directionsRenderer.setMap(null);}
           // console.log(directions)
         } else {
           window.alert("Directions request failed due to " + status);
@@ -91,7 +93,7 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
             center={coordinates} 
             zoom={14} 
             margin={[50, 50, 50, 50]}
-            options={{}}
+            options={{ styles : mapStyles,}}
             onChange={handleOnChange}
             yesIWantToUseGoogleMapApiInternals
             onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
@@ -117,6 +119,12 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
         />
       )}
 </GoogleMapReact>
+
+    <div>
+        {directions && directions.map((direction, index) => (
+          <p key={index}>{parse(direction)}</p>
+        ))}
+      </div>
     </div>
   );
 };

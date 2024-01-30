@@ -11,6 +11,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { debounce } from 'lodash';
 
 function Main() {
+  const [dir , setdir] = useState(false);
   const [rest,setrest] = useState([]);
   const [childClicked , setChildClicked] = useState(null);
   const [coordinates, setcoordinates] = useState({ });
@@ -66,8 +67,11 @@ function Main() {
           <List places={rest} />
         </Grid>
         <Grid item xs={12} md={8}>
-        <Map userCoordinates={userCoordinates} setbounds ={setDebouncedBounds} setcoordinates = {setcoordinates} coordinates={coordinates} places={rest} setChildClicked ={setChildClicked} />        </Grid>
+        <Map userCoordinates={userCoordinates} setbounds ={setDebouncedBounds} setcoordinates = {setcoordinates} coordinates={coordinates} places={rest} setChildClicked ={setChildClicked} dir ={dir} />        </Grid>
       </Grid>
+      <button onSubmit = {()=>{
+        setdir(!dir);
+      }}>Toggle here</button>
     </div>
   );
 }
