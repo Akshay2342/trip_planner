@@ -6,6 +6,7 @@ import polyline from "@mapbox/polyline";
 import mapStyles from "./styles";
 import { Polyline } from "@react-google-maps/api";
 import parse from 'html-react-parser'
+import { set } from "lodash";
 
 
 const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked, userCoordinates , dir }) => {
@@ -15,7 +16,10 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
   const [directions , setDirections] = useState([]);
   const [origin, setorigin] = useState(null);
   const [destination, setdestination] = useState(null);
-  const [waypoints, setwaypoints] = useState(null);
+  const [waypoints, setwaypoints] = useState([]);
+  const [mapInstance, setMapInstance] = useState(null);
+  const [mapsApi, setMapsApi] = useState(null);
+  const [directionsRenderer, setDirectionsRenderer] = useState(null);
 
 
   //Decoding polyline and storing it in decodedPath
@@ -24,17 +28,18 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
     console.log(directions);
   }, [directions]);
 
-  useEffect(() => {
-    const encodedPolyline = "_p~iF~ps|U_ulLnnqC_mqNvxq`@"; // Replace with your actual encoded polyline
-    const decoded = polyline.decode(encodedPolyline).map(([lat, lng]) => ({ lat: lng, lng: lat }));
-    console.log(decoded);
-    setDecodedPath(decoded);
-  }, []);
 
   const handleApiLoaded = (map, maps) => {
+    setMapInstance(map);
+    setMapsApi(maps);
+  };
+
+  // RENDERING DIRECTIO
+  const RenderDirections = (map, maps) => {
     const directionsService = new maps.DirectionsService();
     const directionsRenderer = new maps.DirectionsRenderer();
     directionsRenderer.setMap(map);
+    setDirectionsRenderer(directionsRenderer);
     directionsService.route(
       {
         origin: { lat: 37.77, lng: -122.447 },
@@ -58,8 +63,6 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
           console.log(response?.routes[0].legs[0].steps[0].instructions    )
           const stepInstructions = response?.routes[0].legs.map(leg => leg.steps.map(step => step.instructions));
           setDirections(...stepInstructions);
-         {dir &&  directionsRenderer.setMap(null);}
-          // console.log(directions)
         } else {
           window.alert("Directions request failed due to " + status);
         }
@@ -67,11 +70,12 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
     );
   };
 
-  const handleOnChange = (e) => {
-    // handle the event
+  const handleOnChangeMap = (e) => {
     setcoordinates({ lat: e.center.lat, lng: e.center.lng });
     setbounds({ tr: e.marginBounds.ne, bl: e.marginBounds.sw });
   };
+
+  // SETTING THE MARKER
   const Marker = ({ lat, lng ,place  }) => {
     return (
       <Paper elevation={3} sx={{height : '10', width :'10', backgroundColor: '#f5f5f5' }}  >
@@ -80,6 +84,15 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
       </Paper>
     )
   }
+  const DirectionStop = () => {
+    directionsRenderer?.setMap(null);
+    console.log("wokring")
+  }
+  useEffect(() => {
+    if (map && mapsApi) {
+      {dir &&  directionsRenderer?.setMap(null);}
+    }
+  }, [dir]);
 
   return (
     <div style={{ height: '90vh', width: '100%', margin: '10px' }}>
@@ -94,22 +107,21 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
             zoom={14} 
             margin={[50, 50, 50, 50]}
             options={{ styles : mapStyles,}}
-            onChange={handleOnChange}
+            onChange={handleOnChangeMap}
             yesIWantToUseGoogleMapApiInternals
             onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
             onChildClick={setChildClicked}
           >
-  {places?.map((place , i) => {
-    // console.log('Rendering marker for place:', place);
-    return (
-      <Marker 
-        lat={parseFloat(place.latitude)} 
-        lng={parseFloat(place.longitude)} 
-        place={place}
-        key={i}
-      />
-    );
-  })}
+          {places?.map((place , i) => {
+            return (
+              <Marker 
+                lat={parseFloat(place.latitude)} 
+                lng={parseFloat(place.longitude)} 
+                place={place}
+                key={i}
+              />
+            );
+          })}
         {map && (
         <Polyline
           path={decodedPath} // Use the decoded path
@@ -124,6 +136,10 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
         {directions && directions.map((direction, index) => (
           <p key={index}>{parse(direction)}</p>
         ))}
+      </div>
+      <div >
+        <button onClick={()=>RenderDirections(mapInstance, mapsApi)} >Change map</button>
+        <button onClick={()=>DirectionStop()} >Stop map</button>
       </div>
     </div>
   );
