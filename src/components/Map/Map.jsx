@@ -1,12 +1,14 @@
 import GoogleMapReact from "google-map-react";
 import { Paper, Typography, useMediaQuery } from "@mui/material";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import polyline from "@mapbox/polyline";
 import mapStyles from "./styles";
 import { Polyline } from "@react-google-maps/api";
 import parse from 'html-react-parser'
 import { set } from "lodash";
+import { SelectedPlaceContext } from './SelectedPlaceContext';
+
 
 
 const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked, userCoordinates , dir }) => {
@@ -20,6 +22,7 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
   const [mapInstance, setMapInstance] = useState(null);
   const [mapsApi, setMapsApi] = useState(null);
   const [directionsRenderer, setDirectionsRenderer] = useState(null);
+  const {selectedPlace, setSelectedPlace} = useContext(SelectedPlaceContext);
 
 
   //Decoding polyline and storing it in decodedPath
@@ -119,6 +122,7 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
                 lng={parseFloat(place.longitude)} 
                 place={place}
                 key={i}
+                onClick={() => setSelectedPlace(prev => [...prev, place])}
               />
             );
           })}
