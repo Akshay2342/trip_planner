@@ -73,7 +73,7 @@ function Final() {
   return (
     <div style={{ display: "flex", justifyContent: "center", height: '60rem', }}>
       <DragDropContext onDragEnd={result => onDragEnd(result, rows, setRows)}>
-        {  (column && column.items) &&  Object.entries(rows).map(([columnId, column], index) => {
+        { { rows } &&  Object.entries(rows).map(([columnId, column], index) => {
           return (
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: '1rem' }} key={columnId}>
               <h2>{column?.name}</h2>
@@ -82,7 +82,7 @@ function Final() {
                   return (
                     <div {...provided.droppableProps} ref={provided.innerRef} style={{ background: snapshot.isDraggingOver ? "lightblue" : "white", padding: 4, width: "100vw", minHeight: '8rem', }}>
                     
-                        {column && column?.items.map((item, index) => {
+                        {column && column?.items?.map((item, index) => {
                           return (
                             <Draggable key={item.id} draggableId={item.id} index={index}>
                               {(provided, snapshot) => {
