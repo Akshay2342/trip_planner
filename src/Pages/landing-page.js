@@ -184,7 +184,7 @@ const LandingPage = (props) => {
               <span>Your Trip, Your Money, Your Comfort.</span>
               <br></br>
             </span>
-            <SolidButton button="BOOK NOW"></SolidButton>
+            <SolidButton button="Explore Places"></SolidButton>
           </div>
         </div>
       </div>
