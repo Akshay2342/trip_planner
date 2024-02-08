@@ -1,19 +1,17 @@
 import GoogleMapReact from "google-map-react";
-import { Paper, Typography, useMediaQuery } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useState, useEffect, useContext } from "react";
-import polyline from "@mapbox/polyline";
 import mapStyles from "./styles";
 import { Polyline } from "@react-google-maps/api";
 import parse from 'html-react-parser'
-import { set } from "lodash";
 import { SelectedPlaceContext } from './SelectedPlaceContext';
 
 
 
 const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked, userCoordinates , dir }) => {
   const [map, setMap] = useState(null);
-  const [decodedPath, setDecodedPath] = useState([]); // Store decoded path
+  const [decodedPath, setDecodedPath] = useState([]); 
   const [showDirections , setShowDirections] = useState(true);
   const [directions , setDirections] = useState([]);
   const [origin, setorigin] = useState(null);
@@ -89,7 +87,6 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
 }
   const DirectionStop = () => {
     directionsRenderer?.setMap(null);
-    console.log("wokring")
   }
   useEffect(() => {
     if (map && mapsApi) {
@@ -137,8 +134,7 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
           strokeWeight={2}
         />
       )}
-</GoogleMapReact>
-
+      </GoogleMapReact>
     <div>
         {directions && directions.map((direction, index) => (
           <p key={index}>{parse(direction)}</p>

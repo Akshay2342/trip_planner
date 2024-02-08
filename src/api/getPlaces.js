@@ -1,4 +1,5 @@
 import axios from "axios";  
+import { useState } from "react";
 
 
 export default async function getPlaces({bounds , Place}) {
@@ -18,9 +19,6 @@ export default async function getPlaces({bounds , Place}) {
     };  
     try {
         const  response = await axios.request(options);
-        // console.log(response.data)
-        // return response.data;
-        // console.log(bounds , Place)
         return response.data;
     } catch (error) {
         console.error(error);
