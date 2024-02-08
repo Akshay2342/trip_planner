@@ -77,14 +77,14 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
   };
 
   // SETTING THE MARKER
-  const Marker = ({ lat, lng ,place  }) => {
+  const Marker = ({ lat, lng, place }) => {
     return (
-      <Paper elevation={3} sx={{height : '10', width :'10', backgroundColor: '#f5f5f5' }}  >
-        <LocationOnIcon/>
+      <Paper elevation={3} sx={{height : '10', width :'10', backgroundColor: '#f5f5f5',cursor:'pointer' }}  >
+        <LocationOnIcon onClick={() => {setSelectedPlace( [...selectedPlace, place])}}/>
         <Typography sx={{fontSize : '10px'}}>{place?.name?.substring(0,7)}</Typography>
       </Paper>
     )
-  }
+}
   const DirectionStop = () => {
     directionsRenderer?.setMap(null);
   }
@@ -113,15 +113,18 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
             onChildClick={setChildClicked}
           >
           {places?.map((place , i) => {
+              
             return (
               <Marker 
                 lat={parseFloat(place.latitude)} 
                 lng={parseFloat(place.longitude)} 
                 place={place}
                 key={i}
-                onClick={() => setSelectedPlace(prev => [...prev, place])}
+                
+                
               />
             );
+
           })}
         {map && (
         <Polyline

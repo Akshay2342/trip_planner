@@ -1,112 +1,112 @@
 import React, { useState, useContext } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { SelectedPlaceContext } from "../Map/SelectedPlaceContext";
-
-
-const onDragEnd = (result, rows, setRows) => {
-  if (!result.destination) return;
-  const { source, destination } = result;
-
-  const start = rows[source.droppableId];
-  const end = rows[destination.droppableId];
-
-  if (start === end) {
-    const newList = Array.from(start.items);
-    const [removed] = newList.splice(source.index, 1);
-    newList.splice(destination.index, 0, removed);
-    const newColumn = {
-      ...start,
-      items: newList,
-    };
-    setRows({
-      ...rows,
-      [newColumn.name]: newColumn,
-    });
-  } else {
-    const startList = Array.from(start.items);
-    const [removed] = startList.splice(source.index, 1);
-    const startColumn = {
-      ...start,
-      items: startList,
-    };
-    const endList = Array.from(end.items);
-    endList.splice(destination.index, 0, removed);
-    const endColumn = {
-      ...end,
-      items: endList,
-    };
-    setRows({
-      ...rows,
-      [startColumn.name]: startColumn,
-      [endColumn.name]: endColumn,
-    });
-  }
-};
+import { Card, CardContent, Typography } from '@mui/material';
 
 function Final() {
-  const { selectedPlace } = useContext(SelectedPlaceContext);
+  const {selectedPlace}=useContext(SelectedPlaceContext);
+  console.log(selectedPlace)
+  const newItems = selectedPlace ? selectedPlace.map((place, index) => { return [place.name, place.location_id];}) : [];
+  console.log(newItems)
   const rowsFromBackend = {
     Bucket: {
       name: "Bucket",
-      items: selectedPlace,
+      items: newItems,
     },
     List: {
       name: "List",
       items: [],
     },
   };
-  const [rows, setRows] = useState(rowsFromBackend);
 
-  const responsive = {
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 3,
-      partialVisibilityGutter: 40
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-      partialVisibilityGutter: 30
+  const [columns, setColumns] = useState(rowsFromBackend);
+
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
+    const { source, destination } = result;
+
+    if (source.droppableId !== destination.droppableId) {
+      const sourceColumn = columns[source.droppableId];
+      const destColumn = columns[destination.droppableId];
+      const sourceItems = [...sourceColumn.items];
+      const destItems = [...destColumn.items];
+      const [removed] = sourceItems.splice(source.index, 1);
+      destItems.splice(destination.index, 0, removed);
+      setColumns({
+        ...columns,
+        [source.droppableId]: {
+          ...sourceColumn,
+          items: sourceItems,
+        },
+        [destination.droppableId]: {
+          ...destColumn,
+          items: destItems,
+        },
+      });
+    } else {
+      const column = columns[source.droppableId];
+      const copiedItems = [...column.items];
+      const [removed] = copiedItems.splice(source.index, 1);
+      copiedItems.splice(destination.index, 0, removed);
+      setColumns({
+        ...columns,
+        [source.droppableId]: {
+          ...column,
+          items: copiedItems,
+        },
+      });
     }
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", height: '60rem', }}>
-      <DragDropContext onDragEnd={result => onDragEnd(result, rows, setRows)}>
-        { { rows } &&  Object.entries(rows).map(([columnId, column], index) => {
-          return (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: '1rem' }} key={columnId}>
-              <h2>{column?.name}</h2>
-              <Droppable droppableId={columnId} direction='horizontal'>
-                {(provided, snapshot) => {
-                  return (
-                    <div {...provided.droppableProps} ref={provided.innerRef} style={{ background: snapshot.isDraggingOver ? "lightblue" : "white", padding: 4, width: "100vw", minHeight: '8rem', }}>
-                    
-                        {column && column?.items?.map((item, index) => {
-                          return (
-                            <Draggable key={item.id} draggableId={item.id} index={index}>
-                              {(provided, snapshot) => {
-                                return (
-                                  <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={{ userSelect: "none", padding: 16, margin: '0 8px', minHeight: "50px", backgroundColor: snapshot.isDragging ? "#263B4A" : "#456C86", color: "white", borderRadius: '5px', ...provided.draggableProps.style }}>
-                                    {item.content}
-                                  </div>
-                                );
-                              }}
-                            </Draggable>
-                          );
-                        })}
-                      
-                      {provided.placeholder}
-                    </div>
-                  );
-                }}
-              </Droppable>
-            </div>
-          );
-        })}
-      </DragDropContext>
-    </div>
+    <Card>
+      <CardContent>
+        <DragDropContext onDragEnd={(result) => onDragEnd(result, columns, setColumns)}>
+          {Object.entries(columns).map(([columnId, column], index) => {
+            return (
+              <Card key={columnId}>
+                <CardContent>
+                  <Typography variant="h5" component="div">
+                    {column.name}
+                  </Typography>
+                  <Droppable droppableId={columnId} key={columnId}>
+                    {(provided, snapshot) => {
+                      return (
+                        <div {...provided.droppableProps} ref={provided.innerRef} style={{ background: snapshot.isDraggingOver ? "lightblue" : "white", padding: 4, width: "50vw", minHeight: "8rem" }}>
+                          {column.items.map((item, index) => {
+                            return (
+                              <Draggable key={item[1]} draggableId={item[1]} index={index}>
+                                {(provided, snapshot) => {
+                                  return (
+                                    <Card ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={{...provided.draggableProps.style }}>
+                                      <CardContent>
+                                        <Typography variant="body1" component="div">
+                                          {item[0]}
+                                        </Typography>
+                                      </CardContent>
+
+                                    </Card>
+                                    
+                                  );
+                                }}
+                              </Draggable>
+                            );
+                          })}
+                          {provided.placeholder}
+                        </div>
+                      );
+                    }}
+                  </Droppable>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </DragDropContext>
+      </CardContent>
+    </Card>
   );
 }
+      
+
 
 export default Final;
