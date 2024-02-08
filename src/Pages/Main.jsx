@@ -20,11 +20,12 @@ function Main() {
   const [bounds,setbounds]= useState({bl: {lat : 0, lng : 0},tr:{lat:0 , lng : 0}});
   const [Place, setPlace] = useState('hotels');
   const [rating, setRating] = useState(0);
-  const setDebouncedBounds = debounce((newBounds) => setbounds(newBounds), 3000);
-  const setDebouncedrest = debounce((newBounds) => setrest(newBounds), 3000);
+  const setDebouncedBounds = debounce((newBounds) => setbounds(newBounds), 30);
+  const setDebouncedrest = debounce((newBounds) => setrest(newBounds), 30);
   const options = ['restaurants', 'hotels', 'attractions'];
   const [userCoordinates, setUserCoordinates] = useState({ lat: 0, lng: 0 });
   const [selectedPlace,setSelectedPlace] = useState(null)
+  
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(({ coords : {latitude,longitude}}) => {
@@ -33,15 +34,29 @@ function Main() {
   },[])
 
   useEffect(() => {
-    // Check if coordinates and bounds have meaningful values
-    if (coordinates.lat !== 0 && coordinates.lng !== 0 && bounds.bl.lat !== 0 && bounds.bl.lng !== 0 && bounds.tr.lat !== 0 && bounds.tr.lng !== 0) {
+    // console.log(Place)
+    if(rest.length > 15) {
+      console.log("not")
+    }
+    else if (bounds.bl.lat !== 0 && bounds.bl.lng !== 0 && bounds.tr.lat !== 0 && bounds.tr.lng !== 0) {
       getPlaces({bounds, Place}).then((data) => {
         if (data && data.data) {
           setDebouncedrest(data.data);
         }
       })
     }
-  }, [coordinates, bounds, Place])
+    }, [Place, bounds , coordinates]);
+
+    // const getPl=()=>{
+    //   if (coordinates.lat !== 0 && coordinates.lng !== 0 && bounds.bl.lat !== 0 && bounds.bl.lng !== 0 && bounds.tr.lat !== 0 && bounds.tr.lng !== 0) {
+    //     getPlaces({bounds, Place}).then((data) => {
+    //       if (data && data.data) {
+    //         setDebouncedrest(data.data);
+    //       }
+    //     })
+    //   }
+    //   console.log({coordinates, bounds, Place})
+    // }
 
 
   return (
