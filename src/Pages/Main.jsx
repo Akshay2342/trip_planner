@@ -24,7 +24,7 @@ function Main() {
   const setDebouncedrest = debounce((newBounds) => setrest(newBounds), 3000);
   const options = ['restaurants', 'hotels', 'attractions'];
   const [userCoordinates, setUserCoordinates] = useState({ lat: 0, lng: 0 });
-  const [selectedPlace,setSelectedPlace] = useState(null)
+  const [selectedPlace,setSelectedPlace] = useState([])
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(({ coords : {latitude,longitude}}) => {
@@ -76,6 +76,10 @@ function Main() {
       <button onSubmit = {()=>{
         setdir(!dir);
       }}>Toggle here</button>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
       <Final/>
     </div>
     </SelectedPlaceContext.Provider>
