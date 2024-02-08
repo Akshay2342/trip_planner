@@ -12,7 +12,7 @@ export default async function getPlaces({bounds , Place}) {
         tr_longitude: bounds.tr.lng
       },  
       headers: {
-        'X-RapidAPI-Key': '4a40c8cb35mshe2f55ccd422882ep1a3539jsn4a44c2a814f5',
+        'X-RapidAPI-Key': '325ccf0890msh9d0e34e41aca646p18525ejsn6bd903fd0c7f',
         'X-RapidAPI-Host': 'travel-advisor.p.rapidapi.com'
       }
     };  

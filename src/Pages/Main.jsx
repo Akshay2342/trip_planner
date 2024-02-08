@@ -20,8 +20,8 @@ function Main() {
   const [bounds,setbounds]= useState({bl: {lat : 0, lng : 0},tr:{lat:0 , lng : 0}});
   const [Place, setPlace] = useState('hotels');
   const [rating, setRating] = useState(0);
-  const setDebouncedBounds = debounce((newBounds) => setbounds(newBounds), 3000);
-  const setDebouncedrest = debounce((newBounds) => setrest(newBounds), 3000);
+  const setDebouncedBounds = debounce((newBounds) => setbounds(newBounds), 300);
+  const setDebouncedrest = debounce((newBounds) => setrest(newBounds), 300);
   const options = ['restaurants', 'hotels', 'attractions'];
   const [userCoordinates, setUserCoordinates] = useState({ lat: 0, lng: 0 });
   const [selectedPlace,setSelectedPlace] = useState([])
@@ -76,6 +76,13 @@ function Main() {
       <button onSubmit = {()=>{
         setdir(!dir);
       }}>Toggle here</button>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
       <br/>
       <br/>
       <br/>

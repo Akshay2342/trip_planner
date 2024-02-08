@@ -6,8 +6,8 @@ import { Card, CardContent, Typography } from '@mui/material';
 function Final() {
   const {selectedPlace}=useContext(SelectedPlaceContext);
   console.log(selectedPlace)
-  const newItems = selectedPlace.map((place, index) => { return [place.name, place.location_id];}) 
-  // console.log(newItems)
+  const newItems = selectedPlace ? selectedPlace.map((place, index) => { return [place.name, place.location_id];}) : [];
+  console.log(newItems)
   const rowsFromBackend = {
     Bucket: {
       name: "Bucket",
@@ -86,6 +86,7 @@ function Final() {
                                       </CardContent>
 
                                     </Card>
+                                    
                                   );
                                 }}
                               </Draggable>
