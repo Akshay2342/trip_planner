@@ -6,7 +6,7 @@ const List = ({places}) => {
         <>
             {/* {console.log({places : places})} */}
             {places ? (
-                <Grid container spacing={3} style={{ height: '80vh', overflowY: 'auto' }}>
+                <Grid container spacing={3} style={{ height: '100vh', overflowY: 'auto' }}>
                     {places?.map((place, i) => (
                         <Grid item key={i} xs={12}>
                             <PlaceDetails place={place} />

@@ -11,6 +11,8 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { debounce } from 'lodash';
 import Final from '../components/Planner/Final';
 import { SelectedPlaceContext } from '../components/Map/SelectedPlaceContext';
+import InputLabel from '@mui/material/InputLabel';
+import parse from 'html-react-parser'
 
 function Main() {
   const [dir , setdir] = useState(false);
@@ -26,6 +28,7 @@ function Main() {
   const [userCoordinates, setUserCoordinates] = useState({ lat: 0, lng: 0 });
   const [selectedPlace,setSelectedPlace] = useState([])
   const [ListPlaces, setListPlaces] = useState([]);
+  const [directions , setDirections] = useState([]);
 
 
   useEffect(() => {
@@ -41,7 +44,6 @@ function Main() {
   useEffect(() => {
     // console.log(Place)
     console.log({coordinates , bounds})
-    console.log("comming")
     if(rest.length > 15) {
       console.log("not")
     }
@@ -73,7 +75,9 @@ function Main() {
       <div className='testt' >
       <Header setcoordinates ={setcoordinates}/>
       </div>
-      <Autocomplete
+      <div style={{display : 'flex' , justifyContent : 'space-between'}}> 
+          <div >
+             <Autocomplete
                 id="combo-box-demo"
                 options={options}
                 value={Place}
@@ -82,7 +86,9 @@ function Main() {
                 sx={{ width: 300, margin: 1 }}
                 renderInput={(params) => <TextField {...params} label="Places" />}
             />
-            <Typography variant="h6">Rating</Typography>
+          </div>
+          <div style={{display : 'flex' , justifyContent : 'space-around'} }>
+          <InputLabel id="rating-label">Rating : </InputLabel>
             <Rating 
                 name="simple-controlled"
                 value={rating}
@@ -90,16 +96,21 @@ function Main() {
                     setRating(newValue);
                 }}
             />
-      <Grid container spacing={3} style={{width:'100%'}}>
-        <Grid item xs={12} md={4}>
-          <List places={rest} />
+            </div>
+            </div>
+          <br />
+
+      <Grid container spacing={1} style={{width:'100%' , padding : '20px'}}>
+        <Grid item xs={12} md={3}>
+          {directions.length >1 ?     <div style={{margin : '10px'}}>
+        {directions && directions.map((direction, index) => (
+          <p key={index}>{parse(direction)}</p>
+        ))}
+      </div> : <List places={rest} />}
         </Grid>
-        <Grid item xs={12} md={8}>
-        <Map userCoordinates={userCoordinates} setbounds ={setDebouncedBounds} setcoordinates = {setcoordinates} coordinates={coordinates} places={rest} setChildClicked ={setChildClicked} dir ={dir} ListPlaces ={ListPlaces} />        </Grid>
+        <Grid item xs={12} md={9}>
+        <Map userCoordinates={userCoordinates} setbounds ={setDebouncedBounds} setcoordinates = {setcoordinates} coordinates={coordinates} places={rest} setChildClicked ={setChildClicked} dir ={dir} ListPlaces ={ListPlaces} directions ={directions} setDirections ={setDirections} />        </Grid>
       </Grid>
-      <button onSubmit = {()=>{
-        setdir(!dir);
-      }}>Toggle here</button>
       <br/>
       <br/>
       <br/>
@@ -111,7 +122,9 @@ function Main() {
       <br/>
       <br/>
       <br/>
+      <div style={{margin : '2px'}}>
       <Final setListPlaces ={setListPlaces}/>
+      </div>
     </div>
     </SelectedPlaceContext.Provider>
   );

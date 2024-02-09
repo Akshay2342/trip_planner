@@ -26,7 +26,7 @@ function Final({setListPlaces}) {
   };
 
   useEffect(() => {
-    const newItems = selectedPlace ? selectedPlace.map((place, index) => { return { content : place.name , id :  place.location_id };}) : [];
+    const newItems = selectedPlace ? selectedPlace.map((place, index) => { return { content : place.name , id :  place.location_id , lng : (parseFloat)(place.longitude) , lat :(parseFloat)(place.latitude) };}) : [];
     const rowsFromBackend = {
       Bucket: {
         name: "Bucket",
@@ -110,7 +110,7 @@ function Final({setListPlaces}) {
                     {column.name}
                   </Typography>
 
-                  <Button onClick={()=> setListPlaces(newItems)} > Show Directions</Button>
+                  <Button onClick={()=> setListPlaces(column.items)} > Show Directions</Button>
                   <Droppable droppableId={columnId} key={columnId}>
                     {(provided, snapshot) => {
                       return (

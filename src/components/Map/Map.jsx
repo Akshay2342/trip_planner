@@ -4,18 +4,19 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useState, useEffect, useContext } from "react";
 import mapStyles from "./styles";
 import { Polyline } from "@react-google-maps/api";
-import parse from 'html-react-parser'
+
 import { SelectedPlaceContext } from './SelectedPlaceContext';
 import { classDeclaration } from "@babel/types";
 import {Button} from "@mui/material";
+import { CloseFullscreen } from "@mui/icons-material";
 
 
 
-const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked, userCoordinates , dir , ListPlaces}) => {
+const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked, userCoordinates , dir , ListPlaces , directions , setDirections}) => {
   const [map, setMap] = useState(null);
   const [decodedPath, setDecodedPath] = useState([]); 
   const [showDirections , setShowDirections] = useState(true);
-  const [directions , setDirections] = useState([]);
+
   const [origin, setorigin] = useState(null);
   const [destination, setdestination] = useState(null);
   const [waypoints, setwaypoints] = useState([]);
@@ -23,7 +24,7 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
   const [mapsApi, setMapsApi] = useState(null);
   const [directionsRenderer, setDirectionsRenderer] = useState(null);
   const {selectedPlace, setSelectedPlace} = useContext(SelectedPlaceContext);
-
+  const [directionsService, setDirectionsService] = useState(null);
   //Decoding polyline and storing it in decodedPath
 
   useEffect(() => {
@@ -37,6 +38,14 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
   };
 
   // RENDERING DIRECTIO
+  useEffect(() => {
+    if (mapsApi) {
+      const service = new mapsApi.DirectionsService();
+      const renderer = new mapsApi.DirectionsRenderer();
+      setDirectionsRenderer(renderer);
+      setDirectionsService(service);
+    }
+  }, [mapsApi]);
 
   const RenderDirections = (map, maps , ListPlaces) => {
     // List Places should be array of { lat : , lng : };
@@ -47,12 +56,14 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
       return !isNaN(lat) && !isNaN(lng);
     });
     
+    console.log({ListPlaces})
     if(!ListPlaces || ListPlaces.length < 2){
       ListPlaces = [{lat: 37.77, lng: -122.447}, { lat: 37.79, lng: -122.41 }, { lat: 37.79, lng: -122.41 }, {lat: 37.768, lng: -122.511 }]
     }
-    if(!map || !maps) return;
-    const directionsService = new maps.DirectionsService();
-    const directionsRenderer = new maps.DirectionsRenderer();
+    // if(!map || !maps) return;
+    // const directionsService = new maps.DirectionsService();
+    // const directionsRenderer = new maps.DirectionsRenderer();
+    directionsRenderer?.setMap(null);
     let n = ListPlaces.length;
     const waypts = ListPlaces.slice(1, n-1).map(place => {
       return {
@@ -115,6 +126,7 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
 }
   const DirectionStop = () => {
     directionsRenderer?.setMap(null);
+    setDirections([]);
   }
   useEffect(() => {
     if (map && mapsApi) {
@@ -123,7 +135,7 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
   }, [dir]);
 
   return (
-    <div style={{ height: '90vh', width: '100%', margin: '10px' }}>
+    <div style={{ height: '90vh', width: '100%' }}>
         <GoogleMapReact
             bootstrapURLKeys={{ 
               key: 'AIzaSyAI07B9x4MbIfAwR9QOMSMhYxstd9dRjX4', 
@@ -133,7 +145,7 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
             defaultZoom={14}
             center={coordinates} 
             zoom={14} 
-            margin={[50, 50, 50, 50]}
+            margin={[50, 50, 50 ,50 ]}
             options={{ styles : mapStyles,}}
             onChange={handleOnChangeMap}
             yesIWantToUseGoogleMapApiInternals
@@ -163,15 +175,12 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
         />
       )}
       </GoogleMapReact>
-    <div>
-        {directions && directions.map((direction, index) => (
-          <p key={index}>{parse(direction)}</p>
-        ))}
-      </div>
-      <div >
+
+      <br />
+      <div style={{display : "flex" , justifyContent : "space-around"}}>
         <Button variant="contained" onClick={()=>RenderDirections(mapInstance, mapsApi, ListPlaces)} sx={{marginBottom : "10px"}}>Test Directions</Button>
         <br />
-        <Button variant="contained" onClick={()=>DirectionStop()} > Remove Directions</Button>
+        <Button variant="contained" sx={{marginBottom : "10px"}} onClick={()=>DirectionStop() } >Remove Directions</Button>
       </div>
     </div>
   );
