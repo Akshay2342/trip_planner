@@ -79,7 +79,7 @@ export default function SearchAppBar({setcoordinates}) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            MUI
+            TRIP PLANNER
           </Typography>
         <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}> 
           <Search>

@@ -7,6 +7,7 @@ import { Polyline } from "@react-google-maps/api";
 import parse from 'html-react-parser'
 import { SelectedPlaceContext } from './SelectedPlaceContext';
 import { classDeclaration } from "@babel/types";
+import {Button} from "@mui/material";
 
 
 
@@ -40,6 +41,12 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
   const RenderDirections = (map, maps , ListPlaces) => {
     // List Places should be array of { lat : , lng : };
     console.log("comming TO render directions")
+    ListPlaces = ListPlaces.filter(place => {
+      let lat = parseFloat(place.lat);
+      let lng = parseFloat(place.lng);
+      return !isNaN(lat) && !isNaN(lng);
+    });
+    
     if(!ListPlaces || ListPlaces.length < 2){
       ListPlaces = [{lat: 37.77, lng: -122.447}, { lat: 37.79, lng: -122.41 }, { lat: 37.79, lng: -122.41 }, {lat: 37.768, lng: -122.511 }]
     }
@@ -162,8 +169,9 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
         ))}
       </div>
       <div >
-        <button onClick={()=>RenderDirections(mapInstance, mapsApi, ListPlaces)} >Change map</button>
-        <button onClick={()=>DirectionStop()} >Stop map</button>
+        <Button variant="contained" onClick={()=>RenderDirections(mapInstance, mapsApi, ListPlaces)} sx={{marginBottom : "10px"}}>Test Directions</Button>
+        <br />
+        <Button variant="contained" onClick={()=>DirectionStop()} > Remove Directions</Button>
       </div>
     </div>
   );

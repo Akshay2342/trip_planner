@@ -70,7 +70,9 @@ function Main() {
     <SelectedPlaceContext.Provider value={ {selectedPlace, setSelectedPlace}}>
     <div className="Main">
       <CssBaseline/>
+      <div className='testt' >
       <Header setcoordinates ={setcoordinates}/>
+      </div>
       <Autocomplete
                 id="combo-box-demo"
                 options={options}

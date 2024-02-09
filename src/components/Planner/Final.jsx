@@ -4,6 +4,7 @@ import { SelectedPlaceContext } from "../Map/SelectedPlaceContext";
 import { Card, CardContent, Typography } from '@mui/material';
 import { useEffect } from "react";
 import { set } from "lodash";
+import {Button} from "@mui/material";
 
 
 
@@ -22,22 +23,25 @@ function Final({setListPlaces}) {
       name: "Day1",
       items: [],
     },
-    List1 : {
-      name : "day2",
-      items : [],
-    }
   };
 
   useEffect(() => {
     const newItems = selectedPlace ? selectedPlace.map((place, index) => { return { content : place.name , id :  place.location_id };}) : [];
-    newItems.push({content : "hello" , id : "1"},{content : "hello" , id : "2"},{content : "hello" , id : "3"},{content : "hello" , id : "4"},{content : "hello" , id : "5"},{content : "hello" , id : "6"},{content : "hello" , id : "7"},{content : "hello" , id : "8"},{content : "hello" , id : "9"},{content : "hello" , id : "10"});
     const rowsFromBackend = {
       Bucket: {
         name: "Bucket",
         items: newItems,
       },
-      List: {
-        name: "List",
+      Day1: {
+        name: "Day1",
+        items: [],
+      },
+      Day2: {
+        name: "Day2",
+        items: [],
+      },
+      Day3: {
+        name: "Day3",
         items: [],
       },
     };
@@ -82,30 +86,41 @@ function Final({setListPlaces}) {
       });
     }
   };
+  const addNewList = () => {
+    setColumns(prev => ({
+      ...prev,
+      [`Day${Object.keys(prev).length}`]: {
+        name: `Day${Object.keys(prev).length}`,
+        items: [],
+      },
+    }));
+  };
 
   return (
-    <Card>
+    <>
+    <Card className="DragClass" sx={{display : "flex" , justifyContent : 'space-between'} }>
       <CardContent>
+      <div style={{ display: 'flex', flexWrap : 'wrap' }}>
         <DragDropContext onDragEnd={(result) => onDragEnd(result, columns, setColumns)}>
           {Object.entries(columns).map(([columnId, column], index) => {
             return (
-              <Card key={columnId}>
+              <Card key={columnId} style={{ backgroundColor: index === 0 ? 'lightgrey' : 'white' }}>
                 <CardContent>
                   <Typography variant="h5" component="div">
                     {column.name}
                   </Typography>
 
-                  <button onClick={()=> setListPlaces(newItems)} > Render Dir</button>
+                  <Button onClick={()=> setListPlaces(newItems)} > Show Directions</Button>
                   <Droppable droppableId={columnId} key={columnId}>
                     {(provided, snapshot) => {
                       return (
-                        <div {...provided.droppableProps} ref={provided.innerRef} style={{ background: snapshot.isDraggingOver ? "lightblue" : "white", padding: 4, width: "30vw", minHeight: "8rem" }}>
+                        <div {...provided.droppableProps} ref={provided.innerRef} style={{ background: snapshot.isDraggingOver ? "lightblue" : "white", padding: 4, width: "28vw", minHeight: "8rem" }}>
                           {column.items.map((item, index) => {
                             return (
                               <Draggable key={item.id} draggableId={item.id} index={index}>
                                 {(provided, snapshot) => {
                                   return (
-                                    <Card ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={{...provided.draggableProps.style }}>
+                                    <Card ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={{...provided.draggableProps.style }} sx = {{marginBottom : '5px'}}>
                                       <CardContent>
                                         <Typography variant="h6" component="div">
                                           {item.content}
@@ -127,8 +142,11 @@ function Final({setListPlaces}) {
             );
           })}
         </DragDropContext>
+        </div>
       </CardContent>
     </Card>
+    <Button onClick={addNewList}>Add New Day</Button>
+    </>
   );
 }
       
