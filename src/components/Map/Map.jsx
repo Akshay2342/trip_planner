@@ -1,15 +1,16 @@
 import GoogleMapReact from "google-map-react";
-import { Paper, Typography } from "@mui/material";
+import { List, Paper, Typography } from "@mui/material";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useState, useEffect, useContext } from "react";
 import mapStyles from "./styles";
 import { Polyline } from "@react-google-maps/api";
 import parse from 'html-react-parser'
 import { SelectedPlaceContext } from './SelectedPlaceContext';
+import { classDeclaration } from "@babel/types";
 
 
 
-const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked, userCoordinates , dir }) => {
+const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked, userCoordinates , dir , ListPlaces}) => {
   const [map, setMap] = useState(null);
   const [decodedPath, setDecodedPath] = useState([]); 
   const [showDirections , setShowDirections] = useState(true);
@@ -21,7 +22,6 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
   const [mapsApi, setMapsApi] = useState(null);
   const [directionsRenderer, setDirectionsRenderer] = useState(null);
   const {selectedPlace, setSelectedPlace} = useContext(SelectedPlaceContext);
-
 
   //Decoding polyline and storing it in decodedPath
 
@@ -36,26 +36,42 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
   };
 
   // RENDERING DIRECTIO
-  const RenderDirections = (map, maps) => {
+
+  const RenderDirections = (map, maps , ListPlaces) => {
+    // List Places should be array of { lat : , lng : };
+    console.log("comming TO render directions")
+    if(!ListPlaces || ListPlaces.length < 2){
+      ListPlaces = [{lat: 37.77, lng: -122.447}, { lat: 37.79, lng: -122.41 }, { lat: 37.79, lng: -122.41 }, {lat: 37.768, lng: -122.511 }]
+    }
+    if(!map || !maps) return;
     const directionsService = new maps.DirectionsService();
     const directionsRenderer = new maps.DirectionsRenderer();
+    let n = ListPlaces.length;
+    const waypts = ListPlaces.slice(1, n-1).map(place => {
+      return {
+        location: { lat: place.lat, lng: place.lng },
+        stopover: true,
+      }
+    });
     directionsRenderer.setMap(map);
     setDirectionsRenderer(directionsRenderer);
     directionsService.route(
       {
-        origin: { lat: 37.77, lng: -122.447 },
-        destination: { lat: 37.768, lng: -122.511 },
+        origin: { lat: ListPlaces[0].lat, lng: ListPlaces[0].lng },
+        destination: { lat: ListPlaces[n-1].lat, lng: ListPlaces[n-1].lng },
         travelMode: maps.TravelMode.DRIVING,
-        waypoints: [
-          {
-            location: { lat: 37.79, lng: -122.41 },
-            stopover: true,
-          },
-          {
-            location: { lat: 37.79, lng: -122.41 },
-            stopover: true,
-          },
-        ],
+        // waypoints: [
+        //   // {
+        //   //   location: { lat: 37.79, lng: -122.41 },
+        //   //   stopover: true,
+        //   // },
+        //   // {
+        //   //   location: { lat: 37.79, lng: -122.41 },
+        //   //   stopover: true,
+        //   // },
+
+        // ],
+        waypoints: waypts,
       },
       
       (response, status) => {
@@ -70,6 +86,11 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
       }
     );
   };
+  useEffect(() => {
+    console.log({ListPlaces })
+    RenderDirections(mapInstance, mapsApi, ListPlaces);
+  }, [ListPlaces]);
+
 
   const handleOnChangeMap = (e) => {
     setcoordinates({ lat: e.center.lat, lng: e.center.lng });
@@ -81,7 +102,7 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
     return (
       <Paper elevation={3} sx={{height : '10', width :'10', backgroundColor: '#f5f5f5',cursor:'pointer' }}  >
         <LocationOnIcon onClick={() => {setSelectedPlace( [...selectedPlace, place])}}/>
-        <Typography sx={{fontSize : '10px'}}>{place?.name?.substring(0,7)}</Typography>
+        <Typography sx={{fontSize : '10px'}}>{place?.name?.substring(0,9)}</Typography>
       </Paper>
     )
 }
@@ -141,7 +162,7 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
         ))}
       </div>
       <div >
-        <button onClick={()=>RenderDirections(mapInstance, mapsApi)} >Change map</button>
+        <button onClick={()=>RenderDirections(mapInstance, mapsApi, ListPlaces)} >Change map</button>
         <button onClick={()=>DirectionStop()} >Stop map</button>
       </div>
     </div>

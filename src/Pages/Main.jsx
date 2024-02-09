@@ -20,11 +20,12 @@ function Main() {
   const [bounds,setbounds]= useState({bl: {lat : 0, lng : 0},tr:{lat:0 , lng : 0}});
   const [Place, setPlace] = useState('hotels');
   const [rating, setRating] = useState(0);
-  const setDebouncedBounds = debounce((newBounds) => setbounds(newBounds), 30000);
-  const setDebouncedrest = debounce((newBounds) => setrest(newBounds), 30000);
+  const setDebouncedBounds = debounce((newBounds) => setbounds(newBounds), 300);
+  const setDebouncedrest = debounce((newBounds) => setrest(newBounds), 300);
   const options = ['restaurants', 'hotels', 'attractions'];
   const [userCoordinates, setUserCoordinates] = useState({ lat: 0, lng: 0 });
   const [selectedPlace,setSelectedPlace] = useState([])
+  const [ListPlaces, setListPlaces] = useState([]);
 
 
   useEffect(() => {
@@ -32,6 +33,10 @@ function Main() {
       setUserCoordinates({lat : latitude, lng : longitude});
     })
   },[])
+  
+ useEffect(() => {
+    console.log({ListPlaces})
+  }, [ListPlaces]);
 
   useEffect(() => {
     // console.log(Place)
@@ -88,7 +93,7 @@ function Main() {
           <List places={rest} />
         </Grid>
         <Grid item xs={12} md={8}>
-        <Map userCoordinates={userCoordinates} setbounds ={setDebouncedBounds} setcoordinates = {setcoordinates} coordinates={coordinates} places={rest} setChildClicked ={setChildClicked} dir ={dir} />        </Grid>
+        <Map userCoordinates={userCoordinates} setbounds ={setDebouncedBounds} setcoordinates = {setcoordinates} coordinates={coordinates} places={rest} setChildClicked ={setChildClicked} dir ={dir} ListPlaces ={ListPlaces} />        </Grid>
       </Grid>
       <button onSubmit = {()=>{
         setdir(!dir);
@@ -104,7 +109,7 @@ function Main() {
       <br/>
       <br/>
       <br/>
-      <Final/>
+      <Final setListPlaces ={setListPlaces}/>
     </div>
     </SelectedPlaceContext.Provider>
   );

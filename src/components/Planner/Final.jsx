@@ -3,26 +3,29 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { SelectedPlaceContext } from "../Map/SelectedPlaceContext";
 import { Card, CardContent, Typography } from '@mui/material';
 import { useEffect } from "react";
+import { set } from "lodash";
 
 
 
-function Final() {
+function Final({setListPlaces}) {
   
   const {selectedPlace}=useContext(SelectedPlaceContext);
-  // const [items , setItems] = useState([]);
-  // console.log(selectedPlace)
-  const newItems = selectedPlace ? selectedPlace.map((place, index) => { return { content : place.name , id :  place.location_id };}) : [];
-  // newItems.push({content : "hello" , id : "1"},{content : "hello" , id : "2"},{content : "hello" , id : "3"},{content : "hello" , id : "4"},{content : "hello" , id : "5"},{content : "hello" , id : "6"},{content : "hello" , id : "7"},{content : "hello" , id : "8"},{content : "hello" , id : "9"},{content : "hello" , id : "10"});
+  const newItems = selectedPlace ? selectedPlace.map((place, index) => { return { content : place.name , id :  place.location_id , lng : (parseFloat)(place.longitude) , lat :(parseFloat)(place.latitude) };}) : [];
   console.log(newItems)
+
   const rowsFromBackend = {
     Bucket: {
       name: "Bucket",
       items: newItems,
     },
     List: {
-      name: "List",
+      name: "Day1",
       items: [],
     },
+    List1 : {
+      name : "day2",
+      items : [],
+    }
   };
 
   useEffect(() => {
@@ -91,6 +94,8 @@ function Final() {
                   <Typography variant="h5" component="div">
                     {column.name}
                   </Typography>
+
+                  <button onClick={()=> setListPlaces(newItems)} > Render Dir</button>
                   <Droppable droppableId={columnId} key={columnId}>
                     {(provided, snapshot) => {
                       return (
