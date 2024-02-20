@@ -44,10 +44,10 @@ function Main() {
   useEffect(() => {
     // console.log(Place)
     console.log({coordinates , bounds})
-    if(rest.length > 15) {
-      console.log("not")
-    }
-    else if (bounds.bl.lat !== 0 && bounds.bl.lng !== 0 && bounds.tr.lat !== 0 && bounds.tr.lng !== 0) {
+    // if(rest.length > 15) {
+    //   console.log("not")
+    // }
+     if (bounds.bl.lat !== 0 && bounds.bl.lng !== 0 && bounds.tr.lat !== 0 && bounds.tr.lng !== 0) {
       getPlaces({bounds, Place}).then((data) => {
         if (data && data.data) {
           setDebouncedrest(data.data);

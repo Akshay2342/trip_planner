@@ -71,9 +71,9 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
         stopover: true,
       }
     });
-    directionsRenderer.setMap(map);
+    directionsRenderer?.setMap(map);
     setDirectionsRenderer(directionsRenderer);
-    directionsService.route(
+    directionsService?.route(
       {
         origin: { lat: ListPlaces[0].lat, lng: ListPlaces[0].lng },
         destination: { lat: ListPlaces[n-1].lat, lng: ListPlaces[n-1].lng },
