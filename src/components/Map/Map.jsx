@@ -16,7 +16,6 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
   const [map, setMap] = useState(null);
   const [decodedPath, setDecodedPath] = useState([]); 
   const [showDirections , setShowDirections] = useState(true);
-
   const [origin, setorigin] = useState(null);
   const [destination, setdestination] = useState(null);
   const [waypoints, setwaypoints] = useState([]);
@@ -24,6 +23,7 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
   const [mapsApi, setMapsApi] = useState(null);
   const [directionsRenderer, setDirectionsRenderer] = useState(null);
   const {selectedPlace, setSelectedPlace} = useContext(SelectedPlaceContext);
+  const {setscrollplace, scrollplace} = useContext(SelectedPlaceContext);
   const [directionsService, setDirectionsService] = useState(null);
   //Decoding polyline and storing it in decodedPath
 
@@ -119,7 +119,7 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
   const Marker = ({ lat, lng, place }) => {
     return (
       <Paper elevation={3} sx={{height : '10', width :'10', backgroundColor: '#f5f5f5',cursor:'pointer' }}  >
-        <LocationOnIcon onClick={() => {setSelectedPlace( [...selectedPlace, place])}}/>
+        <LocationOnIcon onClick={() => {setSelectedPlace( [...selectedPlace, place]) , setscrollplace(scrollplace) , console.log(scrollplace)} }/>
         <Typography sx={{fontSize : '10px'}}>{place?.name?.substring(0,9)}</Typography>
       </Paper>
     )
@@ -160,8 +160,6 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
                 lng={parseFloat(place.longitude)} 
                 place={place}
                 key={i}
-                
-                
               />
             );
 

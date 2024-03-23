@@ -29,6 +29,7 @@ function Main() {
   const [selectedPlace,setSelectedPlace] = useState([])
   const [ListPlaces, setListPlaces] = useState([]);
   const [directions , setDirections] = useState([]);
+  const [scrollplace , setscrollplace] = useState();
 
 
   useEffect(() => {
@@ -44,9 +45,9 @@ function Main() {
   useEffect(() => {
     // console.log(Place)
     console.log({coordinates , bounds})
-    // if(rest.length > 15) {
-    //   console.log("not")
-    // }
+    if(rest.length > 15) {
+      return;
+    }
      if (bounds.bl.lat !== 0 && bounds.bl.lng !== 0 && bounds.tr.lat !== 0 && bounds.tr.lng !== 0) {
       getPlaces({bounds, Place}).then((data) => {
         if (data && data.data) {
@@ -69,7 +70,7 @@ function Main() {
 
 
   return (
-    <SelectedPlaceContext.Provider value={ {selectedPlace, setSelectedPlace}}>
+    <SelectedPlaceContext.Provider value={ {selectedPlace, setSelectedPlace ,scrollplace, setscrollplace}}>
     <div className="Main">
       <CssBaseline/>
       <div className='testt' >
@@ -106,10 +107,10 @@ function Main() {
         {directions && directions.map((direction, index) => (
           <p key={index}>{parse(direction)}</p>
         ))}
-      </div> : <List places={rest} />}
+      </div> : <List places={rest}  />}
         </Grid>
         <Grid item xs={12} md={9}>
-        <Map userCoordinates={userCoordinates} setbounds ={setDebouncedBounds} setcoordinates = {setcoordinates} coordinates={coordinates} places={rest} setChildClicked ={setChildClicked} dir ={dir} ListPlaces ={ListPlaces} directions ={directions} setDirections ={setDirections} />        </Grid>
+        <Map userCoordinates={userCoordinates} setbounds ={setDebouncedBounds} setcoordinates = {setcoordinates} coordinates={coordinates} places={rest} setChildClicked ={setChildClicked} dir ={dir} ListPlaces ={ListPlaces} directions ={directions} setDirections ={setDirections}  />        </Grid>
       </Grid>
       <br/>
       <br/>
