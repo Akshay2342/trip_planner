@@ -1,8 +1,11 @@
 import React from 'react';
-import './styles.css';
+import './NewAuth.css';
 // Import your CSS file here
 import { useEffect } from 'react';
 import { auth } from "../Backend/setup";
+import { doc, addDoc } from "firebase/firestore";
+import { collection } from "firebase/firestore";
+import { useNavigate } from 'react-router-dom';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -10,20 +13,23 @@ import {
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
-import { db } from "../Backend/setup";
 import { googleProvider } from "../Backend/setup";
 import { useState } from "react";
 import { updateProfile } from "firebase/auth";
 import { CallMissedOutgoing } from '@mui/icons-material';
+import { db } from "../Backend/setup";
+
+
 
 function ModernLoginPage() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [name, setName] = useState("")
-    const [CurrUser,setCurrUser] =useState(null);
-    const [openSnackbar, setOpenSnackbar] = useState(false);
-
-    const signIn = async () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("")
+  const [CurrUser,setCurrUser] =useState(null);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const navigate = useNavigate();
+  
+  const signIn = async () => {
         try {
           await signInWithEmailAndPassword(auth, email, password);
           console.log("userCreated")
@@ -36,31 +42,33 @@ function ModernLoginPage() {
       const signInWithGoogle = async () => {
         try {
           await signInWithPopup(auth, googleProvider);
-          console.log("working")
+          navigate("/map");
         } catch (err) {
           console.error(err);
         }
       };
 
+
       const signUpWithGoogle = async () => {
         try {
-          console.log("Attempting to sign in with Google...");
           await signInWithPopup(auth, googleProvider).then(async (userCredential) => {
-            console.log("Signed in with Google. Attempting to add user to Firestore...");
             const user = userCredential.user;
-            await setDoc(doc(db, "users", user.uid), {
+      
+            await addDoc(collection(db, "users"), {
+              uid: user.uid,
               name: name,
               email: email,
             });
-            console.log("User added to Firestore. User created.");
+      
           })
           .catch((error) => {
-            console.error("Error in signInWithPopup or setDoc:", error);
+            console.error("Error in signInWithPopup or addDoc:", error);
           });
-        } catch (err) {
-          console.error("Error in signUpWithGoogle:", err);
+        } catch (error) {
+          console.error("Error in signUpWithGoogle:", error);
         }
       };
+    
     const signUp = async () => {
       try {
         await createUserWithEmailAndPassword(auth, email, password).then(async (userCredential) => {
@@ -68,16 +76,16 @@ function ModernLoginPage() {
           await updateProfile(user, {
             displayName: name,
           });
-    
-          await setDoc(doc(db, "users", user.uid), {
+          await addDoc(collection(db, "users"), {
+            uid: user.uid,
             name: name,
             email: email,
           });
         });
         console.log("userCreated")
-      } catch (err) {
-        console.error(err);
-      }
+        } catch (err) {
+          console.error(err);
+        }
     };
     
       const logout = async () => {
@@ -118,7 +126,7 @@ function ModernLoginPage() {
             if(CurrUser == null){
                 setCurrUser(user.email);
             }
-            console.log({name:user.email})
+            console.log({user})
              // or user.displayName, or any other user property
           } else {
             setCurrUser(null);

@@ -45,9 +45,9 @@ function Main() {
   useEffect(() => {
     // console.log(Place)
     console.log({coordinates , bounds})
-    if(rest.length > 15) {
-      return;
-    }
+    // if(rest.length > 15) {
+    //   return;
+    // }
      if (bounds.bl.lat !== 0 && bounds.bl.lng !== 0 && bounds.tr.lat !== 0 && bounds.tr.lng !== 0) {
       getPlaces({bounds, Place}).then((data) => {
         if (data && data.data) {

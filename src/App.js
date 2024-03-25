@@ -8,9 +8,14 @@ import TripPlannerForm from "./Pages/Form";
 import {Auth}  from "./components/auth"
 import { Routes, Route } from "react-router-dom";
 import ModernLoginPage from "./Pages/NewAuth";
+import SavedMap from "./Pages/SavedMap";
+import { useContext } from "react";
+import { UserContext } from "./components/authContext";
 
 const App = () => {
-  return ( 
+  const [user, setUser] = useState(null);
+  return (
+    <UserContext.Provider value={{ user, setUser }}> 
     <div>
       <Routes>
         <Route path="/" element={<LandingPage />} />
@@ -19,8 +24,10 @@ const App = () => {
         <Route path="/map" element={<Main/>} />
         <Route path="/form" element={<TripPlannerForm/>} />
         <Route path="/login" element={<ModernLoginPage/>} />
+        <Route path="/newPage" element={<SavedMap/>} />
       </Routes>
     </div>
+    </UserContext.Provider>
   );
 }
 
