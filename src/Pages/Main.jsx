@@ -1,7 +1,7 @@
 import Header from '../components/Header/Header';
 import List from '../components/List/List';
 import Map from '../components/Map/Map';
-import { CssBaseline,Grid } from '@mui/material';
+import { Button, CssBaseline,Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
 import getPlaces from '../api/getPlaces';
 import { Typography } from '@mui/material';
@@ -13,9 +13,33 @@ import Final from '../components/Planner/Final';
 import { SelectedPlaceContext } from '../components/Map/SelectedPlaceContext';
 import InputLabel from '@mui/material/InputLabel';
 import parse from 'html-react-parser'
+import { useLocation } from 'react-router-dom';
+
+
+// This is the data to be used
+// const formData = {
+//   destination,
+//   lat,
+//   lng,
+//   departureDate,
+//   returnDate,
+//   numTravelers,
+//   purpose,
+//   accommodation,
+//   budget,
+//   activities,
+//   dietaryRestrictions,
+//   transportation,
+//   flexibility,
+//   comments
+// }; have to retrive this
+
 
 function Main() {
   const [dir , setdir] = useState(false);
+  const location = useLocation();
+  const formData = location?.state?.formData;
+
   const [rest,setrest] = useState([]);
   const [childClicked , setChildClicked] = useState(null);
   const [coordinates, setcoordinates] = useState({ });
@@ -32,10 +56,12 @@ function Main() {
   const [scrollplace , setscrollplace] = useState();
 
 
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(({ coords : {latitude,longitude}}) => {
       setUserCoordinates({lat : latitude, lng : longitude});
     })
+    // setcoordinates({ lat, lng });
   },[])
   
  useEffect(() => {
@@ -45,6 +71,7 @@ function Main() {
   useEffect(() => {
     // console.log(Place)
     console.log({coordinates , bounds})
+    console.log("lat and lng : ",{lat : formData?.lat , lng : formData?.lng});
     // if(rest.length > 15) {
     //   return;
     // }
@@ -57,6 +84,7 @@ function Main() {
     }
     }, [Place, bounds , coordinates]);
 
+
     // const getPl=()=>{
     //   if (coordinates.lat !== 0 && coordinates.lng !== 0 && bounds.bl.lat !== 0 && bounds.bl.lng !== 0 && bounds.tr.lat !== 0 && bounds.tr.lng !== 0) {
     //     getPlaces({bounds, Place}).then((data) => {
@@ -67,7 +95,6 @@ function Main() {
     //   }
     //   console.log({coordinates, bounds, Place})
     // }
-
 
   return (
     <SelectedPlaceContext.Provider value={ {selectedPlace, setSelectedPlace ,scrollplace, setscrollplace}}>
@@ -124,9 +151,10 @@ function Main() {
       <br/>
       <br/>
       <div style={{margin : '2px'}}>
-      <Final setListPlaces ={setListPlaces}/>
+      <Final setListPlaces ={setListPlaces}  formData = {formData}/>
       </div>
     </div>
+
     </SelectedPlaceContext.Provider>
   );
 }

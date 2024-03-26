@@ -9,6 +9,8 @@ import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import { Autocomplete } from '@react-google-maps/api';
+import { useEffect, useState } from 'react';
+import { getUserInfo } from '../../api/getUserInfo';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -53,6 +55,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchAppBar({setcoordinates}) {
+  const [userdata, setUserdata] = useState(null);
+    
+  useEffect(() => {
+      getUserInfo().then((userr) => {
+              setUserdata(userr);
+      }); 
+  } ,[] );
+  
   const [autocomplete,setautocomplete]=React.useState(null);
   const onLoad=(autoc)=>setautocomplete(autoc);
   const onPlaceChanged=()=>{
@@ -80,6 +90,7 @@ export default function SearchAppBar({setcoordinates}) {
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
             TRIP PLANNER
+             {userdata && userdata?.name}
           </Typography>
         <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}> 
           <Search>

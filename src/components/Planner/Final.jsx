@@ -5,15 +5,53 @@ import { Card, CardContent, Typography } from '@mui/material';
 import { useEffect } from "react";
 import { set } from "lodash";
 import {Button} from "@mui/material";
+import { db } from "../../Backend/setup";
+import { auth } from "../../Backend/setup";
+import { getUserInfo } from "../../api/getUserInfo";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, updateDoc, arrayUnion, getFirestore } from "firebase/firestore";
+import { columnsRef } from "../globalStore";
+import { getDocs } from "firebase/firestore";
+import { query, collection , where  } from "firebase/firestore";
 
-
-
-function Final({setListPlaces}) {
-  
+function Final({setListPlaces, formData}) {
+  const [uid , setuid] =  useState(null);
   const {selectedPlace}=useContext(SelectedPlaceContext);
   const newItems = selectedPlace ? selectedPlace.map((place, index) => { return { content : place.name , id :  place.location_id , lng : (parseFloat)(place.longitude) , lat :(parseFloat)(place.latitude) };}) : [];
-  console.log(newItems)
-
+  // console.log(newItems)
+  
+  const savetrip = async (columns) => {
+    console.log({uid})
+    const q = query(collection(db, "users"), where("uid", "==", uid));
+    const querySnapshot = await getDocs(q);
+    const docData = querySnapshot.docs[0].data();
+    const docRef = doc(db, 'users', querySnapshot.docs[0].id);
+    let obj = {
+      formData,
+      columns
+    }
+    console.log({obj})
+    console.log({docData})
+    if (docData && Array.isArray(docData.trips)) {
+      // If trips is an array, update it with arrayUnion
+      await updateDoc(docData, {
+        trips: arrayUnion(obj)
+      });
+    } else {
+      // If trips doesn't exist or isn't an array, initialize it as an empty array
+      await updateDoc(docRef, {
+        trips: [obj]
+      });
+    }
+  }
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log("Final " ,{uid : user.uid});
+      setuid(user.uid);
+    });
+    return () => unsubscribe();
+  }, []);
+  
   const rowsFromBackend = {
     Bucket: {
       name: "Bucket",
@@ -146,6 +184,8 @@ function Final({setListPlaces}) {
       </CardContent>
     </Card>
     <Button onClick={addNewList}>Add New Day</Button>
+    <Button onClick={()=>{savetrip(columns)}}> Save My trip </Button>
+
     </>
   );
 }
