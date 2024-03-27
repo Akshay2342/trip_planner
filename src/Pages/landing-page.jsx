@@ -1,13 +1,17 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import SolidButton from '../components/Home/solid-button'
-import PlaceCard from '../components/Home/place-card'
+import SolidButton from '../components/Home/solid-button.js'
+import PlaceCard from '../components/Home/place-card.js'
 import './landing-page.css'
 import '../components/Home/outline-button.js'
 import OutlineButton from '../components/Home/outline-button.js'
 import { noConflict } from 'lodash'
+import { useNavigate } from 'react-router-dom';
+
 
 const LandingPage = (props) => {
+  const navigate = useNavigate();
+  
   return (
     <div className="landing-page-container">
       <Helmet>
@@ -17,6 +21,7 @@ const LandingPage = (props) => {
       <div className="landing-page-top-container">
         <nav data-role="Header" className="landing-page-navbar">
           <h1>Ai Planner</h1>
+        <button onClick={() => navigate('/saved-trips')}>Go To Saved Trip List</button>
           <div className="landing-page-right-side">
             <div className="landing-page-links-container">
               {/* <span className="landing-page-text">Home</span> */}

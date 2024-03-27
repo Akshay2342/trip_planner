@@ -34,7 +34,7 @@ function Final({setListPlaces, formData}) {
     console.log({docData})
     if (docData && Array.isArray(docData.trips)) {
       // If trips is an array, update it with arrayUnion
-      await updateDoc(docData, {
+      await updateDoc(docRef, {
         trips: arrayUnion(obj)
       });
     } else {

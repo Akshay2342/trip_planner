@@ -50,7 +50,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 
-const TripPlannerForm = ({ setFormData }) => {
+const TripPlannerForm = () => {
     const [destination, setDestination] = useState('');
     const [departureDate, setDepartureDate] = useState('');
     const [returnDate, setReturnDate] = useState('');
@@ -100,9 +100,6 @@ const TripPlannerForm = ({ setFormData }) => {
             flexibility,
             comments
         };
-        setFormData(formData);
-        columnsRef.current = formData;
-        console.log(formData)
         navigate('/map', { state: { formData } });
     };
 
