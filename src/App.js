@@ -11,6 +11,7 @@ import SavedMap from "./Pages/SavedMap";
 import { useContext } from "react";
 import { UserContext } from "./components/authContext";
 import { useEffect } from "react";
+import Cardd from "./components/Map/Cardd";
 import TripsData from "./Pages/listSavedTrip";
 
 const App = () => {
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/login" element={<ModernLoginPage/>} />
         <Route path="/newPage" element={<SavedMap/>} />
         <Route path="/saved-trips" element={<TripsData />} />
+        <Route path="/cards" element={<Cardd />} />
         <Route path="/newPage" element={<SavedMap/>} />
       </Routes>
     </UserContext.Provider>

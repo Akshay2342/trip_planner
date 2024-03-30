@@ -4,12 +4,15 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useState, useEffect, useContext } from "react";
 import mapStyles from "./styles";
 import { Polyline } from "@react-google-maps/api";
-
+// import { CardContent } from "@mui/icons-material";
+import {Tooltip} from "@mui/material";
 import { SelectedPlaceContext } from './SelectedPlaceContext';
 import { classDeclaration } from "@babel/types";
 import {Button} from "@mui/material";
 import { CloseFullscreen } from "@mui/icons-material";
-
+import AspectRatio from '@mui/joy/AspectRatio';
+import Card from '@mui/joy/Card';
+import CardContent from '@mui/joy/CardContent';
 
 
 const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked, userCoordinates , dir , ListPlaces , directions , setDirections}) => {
@@ -118,10 +121,38 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
   // SETTING THE MARKER
   const Marker = ({ lat, lng, place }) => {
     return (
-      <Paper elevation={3} sx={{height : '10', width :'10', backgroundColor: '#f5f5f5',cursor:'pointer' }}  >
-        <LocationOnIcon onClick={() => {setSelectedPlace( [...selectedPlace, place]) , setscrollplace(scrollplace) , console.log(scrollplace)} }/>
-        <Typography sx={{fontSize : '10px'}}>{place?.name?.substring(0,9)}</Typography>
-      </Paper>
+      <>
+      <Card
+      variant="outlined"
+      orientation="vertical"
+      sx={{
+          margin: 0,
+          padding :0,
+        width: 95, // adjust this value to your desired width
+        '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder',      transform: 'scale(1.3)', // increase the size of the whole component when hover
+      },
+      }}
+      onClick={() => {setSelectedPlace( [...selectedPlace, place]) , setscrollplace(scrollplace) , console.log(scrollplace)} }
+    >
+<AspectRatio ratio="1" sx={{ width: 90 }}>
+  <Tooltip title={place?.name} arrow>
+    <img
+      src={place?.photo?.images?.small?.url}
+      loading="lazy"
+      alt={place?.name} // display the name when hover over the image
+      style={{ width: '100%', height: '100%' }}
+    />
+  </Tooltip>
+</AspectRatio>
+    <CardContent sx={{marginTop : 0 , paddingTop : 0}}>
+      <Typography level="title-sm" id="card-description">
+        {place?.name}
+      </Typography>
+    </CardContent>  
+    </Card>
+  </>
+
+
     )
 }
   const DirectionStop = () => {

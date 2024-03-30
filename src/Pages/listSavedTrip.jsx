@@ -60,3 +60,5 @@ const TripsData = () => {
 }
 
 export default TripsData;
+  
+

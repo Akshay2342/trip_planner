@@ -74,7 +74,6 @@ const TripPlannerForm = () => {
         const lat = autocomplete?.getPlace().geometry.location.lat();
         const lng = autocomplete?.getPlace().geometry.location.lng();
         const place = autocomplete?.getPlace();
-
         const cityObj = place?.address_components.find(component => component.types.includes('locality'));
         setDestination(cityObj?.short_name);
         setLat(lat);
