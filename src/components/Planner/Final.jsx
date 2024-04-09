@@ -13,6 +13,7 @@ import { doc, updateDoc, arrayUnion, getFirestore } from "firebase/firestore";
 import { columnsRef } from "../globalStore";
 import { getDocs } from "firebase/firestore";
 import { query, collection , where  } from "firebase/firestore";
+import axios from "axios";
 
 function Final({setListPlaces, formData}) {
   const [uid , setuid] =  useState(null);
@@ -21,17 +22,16 @@ function Final({setListPlaces, formData}) {
   // console.log(newItems)
   
   const savetrip = async (columns) => {
-    console.log({uid})
+    // console.log({uid})
     const q = query(collection(db, "users"), where("uid", "==", uid));
     const querySnapshot = await getDocs(q);
     const docData = querySnapshot.docs[0].data();
     const docRef = doc(db, 'users', querySnapshot.docs[0].id);
+    console.log({columns});
     let obj = {
-      formData,
+      formData: formData || "default value",
       columns
     }
-    console.log({obj})
-    console.log({docData})
     if (docData && Array.isArray(docData.trips)) {
       // If trips is an array, update it with arrayUnion
       await updateDoc(docRef, {
@@ -44,6 +44,23 @@ function Final({setListPlaces, formData}) {
       });
     }
   }
+
+  const getRowsUpdated = async () => {
+    const dataToSend = {columns};
+    console.log(dataToSend);
+    try {
+      const response = await axios.post(`http://localhost:4000/UpdateRows`, dataToSend);
+      // Handle response here
+      setColumns(response.data.columns);
+      // console.log(response.data.itenerary_name);
+      // console.log(columns);
+      console.log(response.data)
+      // console.log(response.data)
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       console.log("Final " ,{uid : user.uid});
@@ -121,7 +138,7 @@ function Final({setListPlaces, formData}) {
           ...column,
           items: copiedItems,
         },
-      });
+      }); 
     }
   };
   const addNewList = () => {
@@ -148,7 +165,7 @@ function Final({setListPlaces, formData}) {
                     {column.name}
                   </Typography>
 
-                  <Button onClick={()=> setListPlaces(column.items)} > Show Directions</Button>
+                  <Button onClick={()=>{ setListPlaces(column.items) ; console.log({"set" : column})}} > Show Directions</Button>
                   <Droppable droppableId={columnId} key={columnId}>
                     {(provided, snapshot) => {
                       return (
@@ -183,6 +200,7 @@ function Final({setListPlaces, formData}) {
         </div>
       </CardContent>
     </Card>
+    <Button onClick={getRowsUpdated } >AI Automate</Button>
     <Button onClick={addNewList}>Add New Day</Button>
     <Button onClick={()=>{savetrip(columns)}}> Save My trip </Button>
 

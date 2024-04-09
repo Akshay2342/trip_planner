@@ -1,6 +1,6 @@
 import React from 'react';
 // import './NewAuth.css';
-// Import your CSS file here
+import styles from './NewAuth.module.css';
 import { useEffect } from 'react';
 import { auth } from "../../Backend/setup";
 import { doc, addDoc } from "firebase/firestore";
@@ -21,7 +21,6 @@ import { db } from "../../Backend/setup";
 import {UserContext} from '../../components/authContext';
 import { getUserInfo } from '../../api/getUserInfo';
 import { useContext } from 'react';
-
 
 
 function ModernLoginPage() {
@@ -153,8 +152,9 @@ function ModernLoginPage() {
     
     
     return (
-        <div className="container" id="container">
-            <div className="form-container sign-up">
+      <div className={styles.body}>
+        <div className={styles.container} id="container">
+            <div className={styles['form-container']}>
                 <form onSubmit={(e) => e.preventDefault()}>
                     <h1>Create Account</h1>
                     <input type="text" placeholder="Name"  onChange={(e) => setName(e.target.value)} required/>
@@ -172,7 +172,7 @@ function ModernLoginPage() {
                     <button onClick={signUp}>Sign Up</button>
                 </form>
             </div>
-            <div className="form-container sign-in">
+            <div className={`${styles['form-container']} ${styles['sign-in']}`}>
                 <form onSubmit={(e) => e.preventDefault()}>
                     <h1>Sign In</h1>
                     <div className="social-icons">
@@ -191,20 +191,21 @@ function ModernLoginPage() {
                 <div><h1>Hello {CurrUser}</h1></div>
                 </form> 
             </div>
-            <div className="toggle-container">
-                <div className="toggle">
-                    <div className="toggle-panel toggle-left">
-                        <h1>Welcome Back!</h1>
-                        <p>Enter your personal details to use all site features</p>
-                        <button className="hidden" id="login">Sign In</button>
-                    </div>
-                    <div className="toggle-panel toggle-right">
-                        <h1>Hello, Friend!</h1>
-                        <p>Register with your personal details to use all site features</p>
-                        <button className="hidden" id="register">Sign Up</button>
-                    </div>
-                </div>
+            <div className={styles['toggle-container']}>
+            <div className={styles.toggle}>
+              <div className={`${styles['toggle-panel']} ${styles['toggle-left']}`}>
+                  <h1>Welcome Back!</h1>
+                  <p>Enter your personal details to use all site features</p>
+                  <button className={styles.hidden} id="login">Sign In</button>
+              </div>
+              <div className={`${styles['toggle-panel']} ${styles['toggle-right']}`}>
+                  <h1>Hello, Friend!</h1>
+                  <p>Register with your personal details to use all site features</p>
+                  <button className={styles.hidden} id="register">Sign Up</button>
+              </div>
+          </div>
             </div>
+        </div>
         </div>
     );
 }

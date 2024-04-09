@@ -3,6 +3,8 @@ import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth,db } from '../Backend/setup';
 import {docs, collection, getDocs, query, where} from 'firebase/firestore';
+import { Card, CardContent, CardHeader, Typography, List, ListItem, ListItemText } from '@mui/material';
+
 
 const TripsData = () => {
   const [tripData, setTripData] = useState(null);
@@ -38,6 +40,44 @@ const TripsData = () => {
   if (!tripData) {
     return <div>Loading...</div>;
   }
+  const ItineraryCard = ({ title, items }) => (
+    <Card>
+      <CardHeader title={title} />
+      <CardContent>
+        <List>
+          {items.map((item) => (
+            <ListItem key={item}>
+              <ListItemText primary={item} />
+            </ListItem>
+          ))}
+        </List>
+      </CardContent>
+    </Card>
+  );
+  
+  const Itinerary = ({ destination, budget, departureDate, columns }) => (
+    <div className="itinerary">
+      <h2>{destination}</h2>
+      <p>Budget: ₹{budget}</p>
+      <p>Departure Date: {departureDate}</p>
+      <div className="itinerary-columns">
+        {Object.entries(columns).map(([columnName, columnData]) => (
+          <ItineraryCard key={columnName} title={columnData.name} items={columnData.items} />
+        ))}
+      </div>
+    </div>
+  );
+  const itineraryData = {
+    destination: "Hyderabad",
+    budget: 110000,
+    departureDate: "2024-03-13",
+    columns: {
+      Bucket: { name: "Bucket", items: [] },
+      Day1: { name: "Day1", items: [] },
+      Day2: { name: "Day2", items: [] },
+      Day3: { name: "Day3", items: [] },
+    },
+  };
 
   return (
     <div>
@@ -55,6 +95,8 @@ const TripsData = () => {
           </div>
         </div>
       ))}
+       <Itinerary {...itineraryData} />
+      
     </div>
   );
 }

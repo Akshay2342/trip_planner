@@ -1,5 +1,5 @@
 {
-  "name": "trip_planner",
+  "name": "trip_node",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -10,11 +10,14 @@
     "@mui/joy": "^5.0.0-beta.32",
     "@mui/lab": "^5.0.0-alpha.167",
     "@mui/material": "^5.15.5",
+    "@mui/x-date-pickers": "^7.1.0",
     "@react-google-maps/api": "^2.19.2",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.5",
+    "child_process": "^1.0.2",
+    "dayjs": "^1.11.10",
     "firebase": "^10.9.0",
     "google-map-react": "^2.2.1",
     "html-react-parser": "^5.1.1",
@@ -40,6 +43,9 @@
       "react-app/jest"
     ]
   },
+  "browser": {
+    "child_process": false
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -51,5 +57,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "<!-- Map -> Map.jsx uses google api key -->\r <!-- getPlaces -> Rapid api key  -->\r <!-- directionrenderer.setmap is null -->",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC"
 }

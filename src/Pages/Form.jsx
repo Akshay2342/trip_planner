@@ -7,6 +7,14 @@ import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import { useRef } from 'react';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import {Card} from '@mui/material';   
+import { DatePicker } from '@mui/lab';
+import { Box } from '@mui/material';
+import { Label } from '@mui/icons-material';
+
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -34,7 +42,9 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
-  width: '100%',
+  border : '3px solid #ced4da',
+  borderRadius: '4px', 
+  width: '50%',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
@@ -104,89 +114,101 @@ const TripPlannerForm = () => {
 
 
     return (
-        <Container>
-            <Typography variant="h2" gutterBottom>
-                Trip Planner Form
-            </Typography>
-            <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}> 
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
-        </Autocomplete>
-            <form onSubmit={handleSubmit}>
-                <Grid container spacing={2}>
-                    {/* <Grid item xs={12}>
-                    <TextField id="destination" name="destination" label="Destination" fullWidth required onChange={(e) => setDestination(e.target.value)} />
-                </Grid> */}
+      <Container>
+      <Card sx={{ padding: 3, backgroundColor: '#f5f5f5', width : '500px'}}> 
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
-                <Grid item xs={12} sm={6}>
-                    <TextField id="departure_date" name="departure_date" label="Departure Date" type="date" fullWidth required onChange={(e) => setDepartureDate(e.target.value)} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField id="return_date" name="return_date" label="Return Date" type="date" fullWidth required onChange={(e) => setReturnDate(e.target.value)} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField id="num_travelers" name="num_travelers" label="Number of Travelers" type="number" fullWidth required onChange={(e) => setNumTravelers(e.target.value)} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField id="purpose" name="purpose" label="Purpose of Trip" select fullWidth required onChange={(e) => setPurpose(e.target.value)}>
-                        <MenuItem value="Vacation">Vacation</MenuItem>
-                        <MenuItem value="Business">Business</MenuItem>
-                        <MenuItem value="Other">Other</MenuItem>
-                    </TextField>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField id="accommodation" name="accommodation" label="Accommodation Type Preference" select fullWidth onChange={(e) => setAccommodation(e.target.value)}>
-                        <MenuItem value="Hotel">Hotel</MenuItem>
-                        <MenuItem value="Hostel">Hostel</MenuItem>
-                        <MenuItem value="Airbnb">Airbnb</MenuItem>
-                    </TextField>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField id="budget" name="budget" label="Budget Range" fullWidth onChange={(e) => setBudget(e.target.value)} />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField id="activities" name="activities" label="Activities/Interests" fullWidth onChange={(e) => setActivities(e.target.value)} />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField id="dietary_restrictions" name="dietary_restrictions" label="Dietary Restrictions" fullWidth onChange={(e) => setDietaryRestrictions(e.target.value)} />
-                </Grid>
-                <Grid item xs={12}>
-                <TextField id="transportation" name="transportation" label="Mode of Transportation Preference" select fullWidth value={transportation} onChange={(e) => setTransportation(e.target.value)}>
-                <MenuItem value="Flight">Flight</MenuItem>
-                <MenuItem value="Train">Train</MenuItem>
-                <MenuItem value="Car Rental">Car Rental</MenuItem>
-            </TextField>
-                </Grid>
-                <Grid item xs={12}>
-                    <FormControlLabel
-                        control={<Checkbox id="flexibility" name="flexibility" value="yes" onChange={(e) => setFlexibility(e.target.checked)} />}
-                        label="Flexibility with Transportation Options"
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        id="comments"
-                        name="comments"
-                        label="Additional Information/Comments"
-                        multiline
-                        rows={4}
-                        fullWidth
-                        onChange={(e) => setComments(e.target.value)}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <Button type="submit" variant="contained" color="primary" onClick={handleSubmit}>Submit</Button>
-                </Grid>
-                </Grid>
-            </form>
-        </Container>
+      <Typography variant="h2" gutterBottom>
+           PLAN A   NEW TRIP 
+      </Typography>
+
+
+      <Grid container spacing={2} alignItems="center">
+    <Grid item xs={2}>
+    <Typography variant='h6'>Destination: </Typography>
+    </Grid>
+    <Grid item xs={10}>
+    <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+        <Search>
+          <SearchIconWrapper>
+            <SearchIcon />
+          </SearchIconWrapper>
+          <StyledInputBase
+            placeholder="Search…"
+            // inputProps={{ 'aria-label': 'search' }}
+          />
+        </Search>
+      </Autocomplete>    
+      </Grid>
+      </Grid>
+
+      <form onSubmit={handleSubmit}>
+  <Grid container spacing={2} alignItems="center">
+    <Grid item xs={2}>
+      <Typography variant='h6'>Departure Date</Typography>
+    </Grid>
+    <Grid item xs={10}>
+      <TextField id="departure_date" name="departure_date" sx={{ width: '50%' }} type="date" fullWidth required onChange={(e) => setDepartureDate(e.target.value)} />
+    </Grid>
+
+    <Grid item xs={2}>
+      <Typography variant='h6'>Return Date</Typography>
+    </Grid>
+    <Grid item xs={10}>
+      <TextField id="return_date" sx={{ width: '50%' }} name="return_date" type="date" fullWidth required onChange={(e) => setReturnDate(e.target.value)} />
+    </Grid>
+
+    <Grid item xs={2}>
+      <Typography variant='h6'>Purpose</Typography>
+    </Grid>
+    <Grid item xs={10}>
+      <TextField id="purpose" sx={{ width: '50%' }} name="purpose" label="Purpose of Trip" select fullWidth required onChange={(e) => setPurpose(e.target.value)}>
+        <MenuItem value="Vacation">Vacation</MenuItem>
+        <MenuItem value="Business">Business</MenuItem>
+        <MenuItem value="Other">Other</MenuItem>
+      </TextField>
+    </Grid>
+  </Grid>
+        <Accordion>
+          <AccordionSummary>
+            <Typography>Additional Information</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>Fill out the following fields to help us plan your trip!</Typography>
+        <TextField id="num_travelers" name="num_travelers" label="Number of Travelers" type="number" fullWidth required onChange={(e) => setNumTravelers(e.target.value)} />
+        <TextField id="accommodation" name="accommodation" label="Accommodation Type Preference" select fullWidth onChange={(e) => setAccommodation(e.target.value)}>
+          <MenuItem value="Hotel">Hotel</MenuItem>
+          <MenuItem value="Hostel">Hostel</MenuItem>
+          <MenuItem value="Airbnb">Airbnb</MenuItem>
+        </TextField>
+        <TextField id="budget" name="budget" label="Budget Range" fullWidth onChange={(e) => setBudget(e.target.value)} />
+        <TextField id="activities" name="activities" label="Activities/Interests" fullWidth onChange={(e) => setActivities(e.target.value)} />
+        <TextField id="dietary_restrictions" name="dietary_restrictions" label="Dietary Restrictions" fullWidth onChange={(e) => setDietaryRestrictions(e.target.value)} />
+        <TextField StyledInputBase id="transportation" name="transportation" label="Mode of Transportation Preference" select fullWidth value={transportation} onChange={(e) => setTransportation(e.target.value)}>
+          <MenuItem value="Flight">Flight</MenuItem>
+          <MenuItem value="Train">Train</MenuItem>
+          <MenuItem value="Car Rental">Car Rental</MenuItem>
+        </TextField>
+        <FormControlLabel
+          control={<Checkbox id="flexibility" name="flexibility" value="yes" onChange={(e) => setFlexibility(e.target.checked)} />}
+          label="Flexibility with Transportation Options"
+        />
+        <TextField
+          id="comments"
+          name="comments"
+          label="Additional Information/Comments"
+          multiline
+          rows={4}
+          fullWidth
+          onChange={(e) => setComments(e.target.value)}
+        />
+          </AccordionDetails>
+        </Accordion>
+        <Button type="submit" variant="contained" color="primary" onClick={handleSubmit}>Submit</Button>
+      </form>
+      </Box>
+        </Card>
+    </Container>
     );
 };
 export default TripPlannerForm;

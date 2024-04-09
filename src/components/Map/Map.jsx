@@ -132,7 +132,7 @@ const Map = ({ setcoordinates, setbounds, coordinates, places , setChildClicked,
         '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder',      transform: 'scale(1.3)', // increase the size of the whole component when hover
       },
       }}
-      onClick={() => {setSelectedPlace( [...selectedPlace, place]) , setscrollplace(scrollplace) , console.log(scrollplace)} }
+      onClick={() => {setSelectedPlace( [...selectedPlace, place]) } }
     >
 <AspectRatio ratio="1" sx={{ width: 90 }}>
   <Tooltip title={place?.name} arrow>

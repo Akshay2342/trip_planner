@@ -14,6 +14,8 @@ import { SelectedPlaceContext } from '../components/Map/SelectedPlaceContext';
 import InputLabel from '@mui/material/InputLabel';
 import parse from 'html-react-parser'
 import { useLocation } from 'react-router-dom';
+import DrawerFilters from '../components/Drawer/drawer';
+import {Fab} from '@mui/material';
 
 
 // This is the data to be used
@@ -101,10 +103,12 @@ function Main() {
     <div className="Main">
       <CssBaseline/>
       <div className='testt' >
+        
       <Header setcoordinates ={setcoordinates}/>
       </div>
-      <div style={{display : 'flex' , justifyContent : 'space-between'}}> 
-          <div >
+
+      <div style={{display : 'flex' , justifyContent : 'right'}}> 
+          {/* <div >
              <Autocomplete
                 id="combo-box-demo"
                 options={options}
@@ -113,8 +117,11 @@ function Main() {
                 defaultValue={options[0]}
                 sx={{ width: 300, margin: 1 }}
                 renderInput={(params) => <TextField {...params} label="Places" />}
-            />
-          </div>
+            />  
+          </div> */}
+          {/* <div style={{display : 'flex' , justifyContent : 'space-between'}}>  */}
+              <DrawerFilters setType={setPlace} type={Place} />
+            {/* </div> */}
           <div style={{display : 'flex' , justifyContent : 'space-around'} }>
           <InputLabel id="rating-label">Rating : </InputLabel>
             <Rating 
@@ -153,6 +160,7 @@ function Main() {
       <div style={{margin : '2px'}}>
       <Final setListPlaces ={setListPlaces}  formData = {formData}/>
       </div>
+      <button> chatBot </button>
     </div>
 
     </SelectedPlaceContext.Provider>

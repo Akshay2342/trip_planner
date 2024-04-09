@@ -4,8 +4,6 @@ import {getFirestore} from 'firebase/firestore';
 import { collection, addDoc } from "firebase/firestore";
 
 
-
-
 const firebaseConfig = {
   apiKey: "AIzaSyDSEng_KzYUgAyJpuD4UNQVOGXmvgPM3zg",
   authDomain: "ai-travel-407815.firebaseapp.com",
